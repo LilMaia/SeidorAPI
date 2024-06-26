@@ -23,11 +23,11 @@ const UsoAutomovel = sequelize.define("UsoAutomovel", {
 });
 
 // Relacionamento UsoAutomovel com Automovel
-UsoAutomovel.belongsTo(Automovel, { foreignKey: "automovelId" });
-Automovel.hasMany(UsoAutomovel, { foreignKey: "automovelId" });
+UsoAutomovel.belongsTo(Automovel, { as: "automovel", foreignKey: "automovelId" });
+Automovel.hasMany(UsoAutomovel, { as: "usos", foreignKey: "automovelId" });
 
 // Relacionamento UsoAutomovel com Motorista
-UsoAutomovel.belongsTo(Motorista, { foreignKey: "motoristaId" });
-Motorista.hasMany(UsoAutomovel, { foreignKey: "motoristaId" });
+UsoAutomovel.belongsTo(Motorista, { as: "motorista", foreignKey: "motoristaId" });
+Motorista.hasMany(UsoAutomovel, { as: "usos", foreignKey: "motoristaId" });
 
 export default UsoAutomovel;

@@ -1,9 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const Motorista = require('../models/motorista').default;
+import { Router } from 'express';
+const router = Router();
+import Motorista from '../models/motorista.js';
+import { gerarMotoristas } from '../mocks/motoristaMock.js';
+import { Op } from 'sequelize';
 
 // Cadastrar um novo motorista
-router.post('/', async (req, res) => {
+router.post('/create-driver', async (req, res) => {
   try {
     const motorista = await Motorista.create(req.body);
     res.status(201).json(motorista);
@@ -13,7 +15,7 @@ router.post('/', async (req, res) => {
 });
 
 // Atualizar um motorista cadastrado
-router.put('/:id', async (req, res) => {
+router.put('/update-driver/:id', async (req, res) => {
   try {
     const motorista = await Motorista.findByPk(req.params.id);
     if (motorista) {
@@ -28,7 +30,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Excluir um motorista cadastrado
-router.delete('/:id', async (req, res) => {
+router.delete('/delete-driver/:id', async (req, res) => {
   try {
     const motorista = await Motorista.findByPk(req.params.id);
     if (motorista) {
@@ -43,7 +45,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Recuperar um motorista cadastrado pelo seu identificador único
-router.get('/:id', async (req, res) => {
+router.get('/get-driver/:id', async (req, res) => {
   try {
     const motorista = await Motorista.findByPk(req.params.id);
     if (motorista) {
@@ -57,11 +59,12 @@ router.get('/:id', async (req, res) => {
 });
 
 // Listar os motoristas cadastrados
-router.get('/', async (req, res) => {
+router.get('/get-all-drivers', async (req, res) => {
   try {
     const { nome } = req.query;
     const where = {};
-    if (nome) where.nome = nome;
+    if (nome) where.nome = { [Op.like]: `%${nome}%` };
+
     const motoristas = await Motorista.findAll({ where });
     res.json(motoristas);
   } catch (error) {
@@ -69,4 +72,19 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+// Gerar motoristas falsos
+router.post('/generate-drivers', async (req, res) => {
+  try {
+    const { quantidade } = req.body;
+    const motoristas = gerarMotoristas(quantidade);
+
+    // Salvar motoristas no banco de dados
+    const motoristasCriados = await Motorista.bulkCreate(motoristas);
+
+    res.status(201).json(motoristasCriados);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+export default router;

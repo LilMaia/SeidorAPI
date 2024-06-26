@@ -1,4 +1,4 @@
-import faker from "faker";
+import { faker } from '@faker-js/faker';
 import moment from "moment";
 
 // Função para gerar registros de uso de automóveis falsos
@@ -10,7 +10,7 @@ export function gerarRegistrosDeUso(quantidade, automoveis, motoristas) {
     const motorista = motoristas[Math.floor(Math.random() * motoristas.length)];
     
     const dataDeInicio = faker.date.recent(30); // Data de início nos últimos 30 dias
-    const dataDeTermino = faker.random.boolean() ? faker.date.between(dataDeInicio, new Date()) : null;
+    const dataDeTermino = faker.datatype.boolean() ? faker.date.between(dataDeInicio, new Date()) : null;
     const motivo = faker.lorem.sentence();
 
     registrosDeUso.push({

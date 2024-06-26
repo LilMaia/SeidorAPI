@@ -1,4 +1,4 @@
-import faker from "faker";
+import { faker }  from '@faker-js/faker';
 
 // Função para gerar motoristas falsos
 export function gerarMotoristas(quantidade) {
@@ -6,7 +6,7 @@ export function gerarMotoristas(quantidade) {
 
   for (let i = 0; i < quantidade; i++) {
     motoristas.push({
-      nome: faker.name.findName(),
+      nome: faker.person.fullName(),
     });
   }
 

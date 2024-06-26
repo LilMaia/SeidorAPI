@@ -1,10 +1,10 @@
 import { Router } from 'express';
 const router = Router();
-import Automovel from '../models/automovel';
-import { validateCreateAutomovel, validateUpdateAutomovel, validateDeleteAutomovel, validateGetAutomovelById, validateListAutomoveis, handleValidationErrors } from '../validators/automovelRoutesValidators';
+import Automovel from '../models/automovel.js';
+import { gerarAutomoveis } from '../mocks/automovelMock.js';
 
 // Cadastrar um novo automóvel
-router.post('/', validateCreateAutomovel, handleValidationErrors, async (req, res) => {
+router.post('/create-car', async (req, res) => {
   try {
     const automovel = await Automovel.create(req.body);
     res.status(201).json(automovel);
@@ -14,7 +14,7 @@ router.post('/', validateCreateAutomovel, handleValidationErrors, async (req, re
 });
 
 // Atualizar um automóvel cadastrado
-router.put('/:id', validateUpdateAutomovel, handleValidationErrors, async (req, res) => {
+router.put('/update-car/:id', async (req, res) => {
   try {
     const automovel = await Automovel.findByPk(req.params.id);
     if (automovel) {
@@ -29,7 +29,7 @@ router.put('/:id', validateUpdateAutomovel, handleValidationErrors, async (req, 
 });
 
 // Excluir um automóvel cadastrado
-router.delete('/:id', validateDeleteAutomovel, handleValidationErrors, async (req, res) => {
+router.delete('/delete-car/:id', async (req, res) => {
   try {
     const automovel = await Automovel.findByPk(req.params.id);
     if (automovel) {
@@ -44,7 +44,7 @@ router.delete('/:id', validateDeleteAutomovel, handleValidationErrors, async (re
 });
 
 // Recuperar um automóvel cadastrado pelo seu identificador único
-router.get('/:id', validateGetAutomovelById, handleValidationErrors, async (req, res) => {
+router.get('/get-car/:id', async (req, res) => {
   try {
     const automovel = await Automovel.findByPk(req.params.id);
     if (automovel) {
@@ -58,7 +58,7 @@ router.get('/:id', validateGetAutomovelById, handleValidationErrors, async (req,
 });
 
 // Listar os automóveis cadastrados
-router.get('/', validateListAutomoveis, handleValidationErrors, async (req, res) => {
+router.get('/get-all-cars', async (req, res) => {
   try {
     const { cor, marca } = req.query;
     const where = {};
@@ -67,6 +67,21 @@ router.get('/', validateListAutomoveis, handleValidationErrors, async (req, res)
 
     const automoveis = await Automovel.findAll({ where });
     res.json(automoveis);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+//Gerar automóveis falsos
+router.post('/generate-cars', async (req, res) => {
+  try {
+    const { quantidade } = req.body;
+    const automoveis = gerarAutomoveis(quantidade);
+
+    // Salvar automóveis no banco de dados
+    const automoveisCriados = await Automovel.bulkCreate(automoveis);
+
+    res.status(201).json(automoveisCriados);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

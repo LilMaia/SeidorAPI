@@ -1,4 +1,4 @@
-import faker from "faker";
+import { faker } from '@faker-js/faker';
 
 // Função para gerar automóveis falsos
 export function gerarAutomoveis(quantidade) {

@@ -3,6 +3,9 @@ import express from "express";
 import helmet from "helmet";
 import { PORT } from "./config/config.js";
 import sequelize from "./db.js";
+import automovelRoutes from "./routes/automovelRoutes.js";
+import motoristaRoutes from "./routes/motoristaRoutes.js";
+import usoAutomovelRoutes from "./routes/usoAutomovelRoutes.js";
 
 // Criando uma instância do aplicativo Express
 const app = express();
@@ -35,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware: Configurando as rotas do aplicativo, agrupadas no módulo routes
-app.use();
+app.use(automovelRoutes,motoristaRoutes,usoAutomovelRoutes);
 
 // Iniciando o servidor para escutar na porta especificada
 app.listen(PORT, (err) => {

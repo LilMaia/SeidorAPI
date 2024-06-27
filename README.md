@@ -27,7 +27,7 @@ adress: localhost
 port : 5432
 nome do database: seidordb
 
-## 4. Executar os testes
+## 4. Executar os testes de unidade
 Para garantir que tudo está funcionando corretamente, execute os testes:
 
 npm test nomeDoTeste.test.js

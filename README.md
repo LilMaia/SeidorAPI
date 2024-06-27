@@ -19,13 +19,13 @@ Instale as dependências do projeto usando npm:
 npm install
 
 ## 3. Configurar o banco de dados
-Criar banco de dados usando o Pgadmin4
+Criar o banco de dados usando o Pgadmin4
 
-usuario: postgres
-senha: 1234
-adress: localhost
-port : 5432
-nome do database: seidordb
+- usuario: postgres
+- senha: 1234
+- adress: localhost
+- port : 5432
+- nome do database: seidordb
 
 ## 4. Executar os testes de unidade
 Para garantir que tudo está funcionando corretamente, execute os testes:

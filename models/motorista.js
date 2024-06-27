@@ -1,4 +1,4 @@
-import sequelize from "../db.js";
+import sequelize from "../db/db.js";
 import { INTEGER, STRING } from "sequelize";
 
 const Motorista = sequelize.define("Motorista", {

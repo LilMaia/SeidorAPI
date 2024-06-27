@@ -1,4 +1,4 @@
-import sequelize from "../db.js";
+import sequelize from "../db/db.js";
 import { DATE, INTEGER, STRING } from "sequelize";
 import Automovel from "./automovel.js";
 import Motorista from "./motorista.js";

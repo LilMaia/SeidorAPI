@@ -2,7 +2,7 @@
 import express from "express";
 import helmet from "helmet";
 import { PORT } from "./config/config.js";
-import sequelize from "./db.js";
+import sequelize from "./db/db.js";
 import automovelRoutes from "./routes/automovelRoutes.js";
 import motoristaRoutes from "./routes/motoristaRoutes.js";
 import usoAutomovelRoutes from "./routes/usoAutomovelRoutes.js";

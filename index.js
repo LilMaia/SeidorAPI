@@ -38,16 +38,29 @@ app.use((req, res, next) => {
 });
 
 // Middleware: Configurando as rotas do aplicativo, agrupadas no módulo routes
-app.use(automovelRoutes,motoristaRoutes,usoAutomovelRoutes);
+app.use(automovelRoutes);
+app.use(motoristaRoutes);
+app.use(usoAutomovelRoutes);
 
-// Iniciando o servidor para escutar na porta especificada
-app.listen(PORT, (err) => {
-  if (err) {
-    console.error("Erro ao iniciar o servidor:", err);
-  } else {
-    console.log(`Servidor está rodando na porta ${PORT}`);
+let server;
+
+// Função para iniciar o servidor
+export function startServer() {
+  server = app.listen(PORT, (err) => {
+    if (err) {
+      console.error("Erro ao iniciar o servidor:", err);
+    } else {
+      console.log(`Servidor está rodando na porta ${PORT}`);
+    }
+  });
+}
+
+// Função para fechar o servidor
+export function closeServer() {
+  if (server) {
+    server.close();
   }
-});
+}
 
 // Iniciando a conexão com o banco de dados
 sequelize.sync().then(
@@ -58,3 +71,5 @@ sequelize.sync().then(
     console.error("Erro ao conectar ao banco de dados");
   }
 );
+
+export default app;

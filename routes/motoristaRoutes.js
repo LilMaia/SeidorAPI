@@ -19,8 +19,8 @@ router.put('/update-driver/:id', async (req, res) => {
   try {
     const motorista = await Motorista.findByPk(req.params.id);
     if (motorista) {
-      await motorista.update(req.body);
-      res.json(motorista);
+      await motorista.update(req.body);  // Atualiza o motorista com os dados recebidos em req.body
+      res.json(motorista);  // Retorna o motorista atualizado
     } else {
       res.status(404).json({ error: 'Motorista não encontrado' });
     }
@@ -76,6 +76,11 @@ router.get('/get-all-drivers', async (req, res) => {
 router.post('/generate-drivers', async (req, res) => {
   try {
     const { quantidade } = req.body;
+
+    if (!quantidade) {
+      return res.status(400).json({ error: 'A quantidade de motoristas é obrigatória' });
+    }
+
     const motoristas = gerarMotoristas(quantidade);
 
     // Salvar motoristas no banco de dados

@@ -9,51 +9,62 @@ import { gerarRegistrosDeUso } from "../mocks/usoAutomovelMock.js";
 router.post("/create-carUsage", async (req, res) => {
   try {
     const { automovelId, motoristaId, dataDeInicio, motivo } = req.body;
+    console.log(`Recebido dados para criar uso de automóvel: ${automovelId}, ${motoristaId}, ${dataDeInicio}, ${motivo}`);
+
     // Verificar se o automóvel está em uso
     const automovelEmUso = await UsoAutomovel.findOne({
       where: { automovelId, dataDeTermino: null },
     });
     if (automovelEmUso) {
+      console.log(`Erro: Automóvel ${automovelId} já está em uso.`);
       return res.status(400).json({ error: "Este automóvel já está em uso." });
     }
+
     // Verificar se o motorista está utilizando outro automóvel
     const motoristaEmUso = await UsoAutomovel.findOne({
       where: { motoristaId, dataDeTermino: null },
     });
     if (motoristaEmUso) {
-      return res
-        .status(400)
-        .json({ error: "Este motorista já está utilizando outro automóvel." });
+      console.log(`Erro: Motorista ${motoristaId} já está utilizando outro automóvel.`);
+      return res.status(400).json({ error: "Este motorista já está utilizando outro automóvel." });
     }
 
+    // Criar o registro de uso de automóvel
     const usoAutomovel = await UsoAutomovel.create({
       automovelId,
       motoristaId,
       dataDeInicio,
       motivo,
     });
+    console.log(`Registro de uso de automóvel criado com sucesso: ${usoAutomovel.usoAutomovelId}`);
+
     res.status(201).json(usoAutomovel);
   } catch (error) {
+    console.error(`Erro ao criar registro de uso de automóvel: ${error.message}`);
     res.status(400).json({ error: error.message });
   }
 });
 
-// Finalizar a utilização de um automóvel
+// Rota para atualizar um registro de uso de automóvel
 router.put("/update-carUsage/:id", async (req, res) => {
   try {
     const usoAutomovel = await UsoAutomovel.findByPk(req.params.id);
+    
     if (usoAutomovel) {
-      await usoAutomovel.update({ dataDeTermino: req.body.dataDeTermino });
-      res.json(usoAutomovel);
+      // Verifica se os dados a serem atualizados são válidos
+      if (req.body.dataDeTermino) {
+        await usoAutomovel.update({ dataDeTermino: req.body.dataDeTermino });
+      }
+      
+      res.status(200).json(usoAutomovel);
     } else {
-      res
-        .status(404)
-        .json({ error: "Não foi encontrado registro de uso do carro" });
+      res.status(404).json({ error: "Registro de uso de automóvel não encontrado" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
+
 
 // Listar os registros de utilização cadastrados
 router.get("/get-all-carUsage", async (req, res) => {

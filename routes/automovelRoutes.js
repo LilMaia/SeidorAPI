@@ -7,7 +7,7 @@ import { gerarAutomoveis } from '../mocks/automovelMock.js';
 router.post('/create-car', async (req, res) => {
   try {
     const automovel = await Automovel.create(req.body);
-    res.status(201).json(automovel);
+    res.status(201).json({ ...automovel.toJSON(), id: automovel.id });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -76,6 +76,11 @@ router.get('/get-all-cars', async (req, res) => {
 router.post('/generate-cars', async (req, res) => {
   try {
     const { quantidade } = req.body;
+
+    if (!quantidade) {
+      return res.status(400).json({ error: "A quantidade não foi fornecida." });
+    }
+
     const automoveis = gerarAutomoveis(quantidade);
 
     // Salvar automóveis no banco de dados
@@ -83,7 +88,7 @@ router.post('/generate-cars', async (req, res) => {
 
     res.status(201).json(automoveisCriados);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
